@@ -1,0 +1,26 @@
+.usuarios-container {
+  padding: 40px;
+}
+
+.descricao {
+  margin-top: 10px;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .topbar {
+    padding-left: 16px;
+  }
+
+  .dashboard-content {
+    margin: 70px 0 0 0;
+    width: 100%;
+    justify-content: flex-start;
+    padding: 20px;
+    height: auto;
+  }
+}
