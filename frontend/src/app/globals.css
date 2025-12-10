@@ -1,8 +1,30 @@
+
+
+
 body {
   display: flex;
   margin: 0;
   padding: 0;
+  background-image: url("https://img.freepik.com/fotos-premium/padrao-de-fundo-de-varias-pilhas-de-livros_974629-275700.jpg?semt=ais_se_enriched&w=740&q=80");
+  background-size: cover;          /* cobre a tela inteira */
+  background-position: center;     /* centraliza */
+  background-repeat: no-repeat;
+  background-attachment: fixed;    /* efeito parallax suave */
 }
+
+/* Overlay para deixar clarinho */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.50); /* clareia */
+  backdrop-filter: brightness(1.1);
+  z-index: -1;
+}
+
 
 /* Conteúdo da página */
 .dashboard-content {
@@ -25,8 +47,7 @@ body {
 .sidebar {
   width: 240px;
   height: 100vh;
-  background: #fafafa;
-  border-right: 1px solid #eee;
+  background: #494040ff;
   padding: 24px 16px;
   position: fixed;
   left: 0;
@@ -39,6 +60,7 @@ body {
 .sidebar-title {
   font-size: 1.3rem;
   font-weight: bold;
+  color: #eae5e5ff;
 }
 
 .sidebar-nav {
@@ -51,17 +73,17 @@ body {
   padding: 10px 14px;
   border-radius: 8px;
   text-decoration: none;
-  color: #333;
+  color: #eae5e5ff;
   font-weight: 500;
   transition: 0.2s;
 }
 
 .sidebar-link:hover {
-  background: #e6e6e6;
+  background: #857474ff;
 }
 
 .sidebar-link.active {
-  background: #0070f3;
+  background: #857474ff;
   color: white;
 }
 
@@ -70,9 +92,6 @@ body {
 .topbar {
   width: calc(100% - 240px);
   height: 60px;
-  background: white;
-  border-bottom: 1px solid #eee;
-
   display: flex;
   justify-content: center;  /* Texto centralizado */
   align-items: center;
