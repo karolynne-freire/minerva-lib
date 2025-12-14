@@ -3,14 +3,21 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
-import { Container, Grid, Card, Actions, Button } from "@/styles/ui";
+import {
+  Container,
+  Grid,
+  Card,
+  Actions,
+  Button,
+  Status,
+} from "@/styles/ui";
 import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
-
 
 interface Book {
   id: number;
   titulo: string;
   autor: string;
+  status: "emprestado" | "disponivel";
 }
 
 export default function BooksPage() {
@@ -37,11 +44,24 @@ export default function BooksPage() {
 
   return (
     <Container>
+      <Button
+        onClick={() => router.push("/livros/novo")}
+        style={{ marginBottom: 24 }}
+      >
+        + Novo Livro
+      </Button>
+
       <Grid>
         {books.map((book) => (
           <Card key={book.id}>
             <h3>{book.titulo}</h3>
             <p>Autor: {book.autor}</p>
+
+            <Status status={book.status}>
+              {book.status === "emprestado"
+                ? "Emprestado"
+                : "Disponível"}
+            </Status>
 
             <Actions>
               <Button onClick={() => router.push(`/livros/${book.id}`)}>

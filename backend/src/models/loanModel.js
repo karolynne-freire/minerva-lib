@@ -2,15 +2,21 @@ import { db } from "../database/connection.js";
 
 export const LoanModel = {
 
-  // Listar
+  // Listar empréstimos
   async getAll() {
     const [rows] = await db.query(`
-      SELECT l.id, u.nome AS usuario, b.titulo AS livro, 
-             l.data_emprestimo, l.data_devolucao
+      SELECT 
+        l.id,
+        b.titulo AS titulo,
+        u.nome AS usuario,
+        l.data_emprestimo,
+        l.data_devolucao
       FROM loans l
       JOIN users u ON u.id = l.user_id
       JOIN books b ON b.id = l.book_id
+      ORDER BY l.data_emprestimo DESC
     `);
+
     return rows;
   },
 
@@ -18,18 +24,19 @@ export const LoanModel = {
   async create(data) {
     const { user_id, book_id, data_emprestimo } = data;
 
-    // Verificar se o livro já está emprestado
-    const [check] = await db.query(`
-      SELECT id FROM loans
-      WHERE book_id = ? AND data_devolucao IS NULL
-    `, [book_id]);
+    // ❌ Livro já emprestado?
+    const [check] = await db.query(
+      `SELECT id FROM loans 
+       WHERE book_id = ? AND data_devolucao IS NULL`,
+      [book_id]
+    );
 
     if (check.length > 0) {
       return { error: "Livro já está emprestado" };
     }
 
     const [result] = await db.query(
-      `INSERT INTO loans (user_id, book_id, data_emprestimo) 
+      `INSERT INTO loans (user_id, book_id, data_emprestimo)
        VALUES (?, ?, ?)`,
       [user_id, book_id, data_emprestimo]
     );
@@ -39,11 +46,12 @@ export const LoanModel = {
 
   // Devolver livro
   async returnBook(id) {
-    const [result] = await db.query(`
-      UPDATE loans
-      SET data_devolucao = CURDATE()
-      WHERE id = ?
-    `, [id]);
+    const [result] = await db.query(
+      `UPDATE loans
+       SET data_devolucao = CURDATE()
+       WHERE id = ?`,
+      [id]
+    );
 
     return result.affectedRows > 0;
   }

@@ -6,7 +6,8 @@ const router = Router();
 router.get("/", LoanController.list);
 router.post("/", LoanController.create);
 
-// rota para devolver
-router.put("/return/:id", LoanController.return);
+// devolver livro
+router.patch("/:id/return", LoanController.return);
 
 export default router;
+

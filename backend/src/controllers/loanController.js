@@ -14,10 +14,9 @@ export const LoanController = {
       return res.status(400).json({ error: result.error });
     }
 
-    return res.json(result);
+    res.status(201).json(result);
   },
 
-  // Devolver livro
   async return(req, res) {
     const { id } = req.params;
 
@@ -27,6 +26,6 @@ export const LoanController = {
       return res.status(400).json({ error: "Não foi possível devolver" });
     }
 
-    res.json({ status: "Livro devolvido com sucesso" });
+    res.json({ message: "Livro devolvido com sucesso" });
   }
 };

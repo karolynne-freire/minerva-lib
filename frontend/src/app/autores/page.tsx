@@ -5,8 +5,6 @@ import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import {
   CardTitle,
-  Actions,
-  AddButton,
 } from "./styles";
 
 import {
@@ -48,9 +46,11 @@ export default function AuthorsPage() {
 
   return (
     <Container>
-      <AddButton onClick={() => router.push("/autores/novo")}>
-        + Novo Autor
-      </AddButton>
+  <div style={{ marginBottom: "24px" }}>
+    <Button onClick={() => router.push("/autores/novo")}>
+      + Novo Autor
+    </Button>
+  </div>
 
       <Grid>
         {authors.map((author) => (
