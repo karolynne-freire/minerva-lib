@@ -1,25 +1,32 @@
 "use client";
 
-import BookCard from "@/components/BookCard";
+import { useEffect, useState } from "react";
+import BookCard from "@/components/BookCard/BookCard";
 
 export default function HomePage() {
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/books")
+      .then((res) => res.json())
+      .then((data) => setBooks(data))
+      .catch((err) => console.error("Erro ao carregar livros:", err));
+  }, []);
+
   return (
     <div className="dashboard-content">
       <h1>Bem-vindo à Minerva Lib 📚</h1>
-      <p>Escolha uma opção na barra lateral.</p>
+      <p>Livros cadastrados no sistema</p>
 
       <div className="cards-container">
-        <BookCard
-          title="O Senhor dos Anéis"
-          author="J.R.R. Tolkien"
-          status="disponível"
-        />
-
-        <BookCard
-          title="Dom Casmurro"
-          author="Machado de Assis"
-          status="emprestado"
-        />
+        {books.map((book: any) => (
+          <BookCard
+            key={book.id}
+            title={book.titulo}
+            author={book.autor}
+            status="disponível" // depois a gente puxa o status do BD também
+          />
+        ))}
       </div>
     </div>
   );

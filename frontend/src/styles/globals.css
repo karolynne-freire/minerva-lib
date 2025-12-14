@@ -1,49 +1,38 @@
-/* NAVBAR */
-.navbar {
-  width: 100%;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 12px 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+/* Reset básico opcional */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.navbar-content {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
+  body {
+    margin: 0;
+    min-height: 100vh;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background-image: url("https://img.freepik.com/fotos-gratis/sortimento-de-livros-com-fundo-escuro_23-2148898297.jpg?semt=ais_hybrid&w=740&q=80");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: Arial, sans-serif;
+  }
+  
+.content {
+  margin-left: 240px;
+  padding: 24px;
+  transition: margin-left 0.3s ease;
+  position: relative; /* Adicione, se não tiver */
+  z-index: 1; /* Para garantir que não sobreponha o botão */
 }
 
-.navbar-logo {
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
-.navbar-links {
-  display: flex;
-  gap: 24px;
-  list-style: none;
-}
-
-.navbar-links a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.navbar-links a:hover {
-  color: #0070f3;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .navbar-links {
-    display: none; /* deixa a navbar limpa no mobile */
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    padding-top: 60px;   /* Espaço para o hamburger em cima */
+  padding-left: 24px;  /* Espaço para o hamburger na esquerda */
+  padding-right: 24px;
   }
 }
+
+

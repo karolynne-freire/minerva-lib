@@ -1,6 +1,7 @@
-import { db } from "./connection.js";
+import { db } from "../database/connection.js";
 
 export async function setupDatabase() {
+  console.log("➡️ Executando setupDatabase()...");
   await db.query(`
     CREATE TABLE IF NOT EXISTS authors (
       id INT AUTO_INCREMENT PRIMARY KEY,
