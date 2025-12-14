@@ -4,14 +4,19 @@ import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import {
+  CardTitle,
+  Actions,
+  AddButton,
+} from "./styles";
+
+import {
   Container,
   Grid,
   Card,
-  CardTitle,
   Actions,
   Button,
-  AddButton,
-} from "./styles";
+} from "@/styles/ui";
+
 import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
 
 interface Author {
