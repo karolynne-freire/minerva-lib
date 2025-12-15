@@ -1,21 +1,12 @@
-import express from "express";
+import { Router } from "express";
 import { AuthorController } from "../controllers/authorController.js";
 
-const router = express.Router();
+const router = Router();
 
-// LISTAR autores
-router.get("/", AuthorController.index);
-
-// BUSCAR autor por ID (opcional)
-router.get("/:id", AuthorController.show);
-
-// CRIAR autor
-router.post("/", AuthorController.store);
-
-// ATUALIZAR autor
+router.get("/", AuthorController.list);
+router.get("/:id", AuthorController.getById);
+router.post("/", AuthorController.create);
 router.put("/:id", AuthorController.update);
-
-// EXCLUIR autor
 router.delete("/:id", AuthorController.delete);
 
 export default router;

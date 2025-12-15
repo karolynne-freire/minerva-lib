@@ -6,21 +6,31 @@ import {
 } from "./styles";
 
 interface Props {
+  title: string;
+  description?: string;
+  confirmText?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-export default function ConfirmModal({ onConfirm, onCancel }: Props) {
+export default function ConfirmModal({
+  title,
+  description,
+  confirmText = "Confirmar",
+  onConfirm,
+  onCancel,
+}: Props) {
   return (
     <Overlay>
       <Modal>
-        <h3>Excluir autor?</h3>
-        <p>Essa ação não poderá ser desfeita.</p>
+        <h3>{title}</h3>
+
+        {description && <p>{description}</p>}
 
         <ModalActions>
           <Button onClick={onCancel}>Cancelar</Button>
           <Button danger onClick={onConfirm}>
-            Excluir
+            {confirmText}
           </Button>
         </ModalActions>
       </Modal>

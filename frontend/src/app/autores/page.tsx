@@ -19,6 +19,7 @@ import ApiError from "@/components/ApiError/ApiError";
 interface Author {
   id: number;
   nome: string;
+  nacionalidade: string;
 }
 
 export default function AuthorsPage() {
@@ -71,6 +72,7 @@ export default function AuthorsPage() {
         {authors.map((author) => (
           <Card key={author.id}>
             <CardTitle>{author.nome}</CardTitle>
+            <p>{author.nacionalidade}</p>
 
             <Actions>
               <Button onClick={() => router.push(`/autores/${author.id}`)}>
@@ -85,12 +87,16 @@ export default function AuthorsPage() {
         ))}
       </Grid>
 
-      {authorToDelete && (
-        <ConfirmModal
-          onCancel={() => setAuthorToDelete(null)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
+{authorToDelete && (
+  <ConfirmModal
+    title="Excluir autor?"
+    description="Essa ação não poderá ser desfeita."
+    confirmText="Excluir"
+    onCancel={() => setAuthorToDelete(null)}
+    onConfirm={handleConfirmDelete}
+  />
+)}
+
     </Container>
   );
 }

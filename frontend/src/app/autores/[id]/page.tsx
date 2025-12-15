@@ -9,27 +9,37 @@ import {
   Input,
   Button,
   CloseButton,
+  ErrorText,
 } from "../novo/styles";
 
 export default function EditAuthorPage() {
   const { id } = useParams();
   const router = useRouter();
+
   const [nome, setNome] = useState("");
+  const [nacionalidade, setNacionalidade] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     api.get(`/authors/${id}`).then((response) => {
       setNome(response.data.nome);
+      setNacionalidade(response.data.nacionalidade);
     });
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nome.trim()) {
+    if (!nome.trim() || !nacionalidade.trim()) {
+      setError("Preencha todos os campos");
       return;
     }
 
-    await api.put(`/authors/${id}`, { nome });
+    await api.put(`/authors/${id}`, {
+      nome,
+      nacionalidade,
+    });
+
     router.push("/autores");
   };
 
@@ -48,8 +58,17 @@ export default function EditAuthorPage() {
           placeholder="Nome do autor"
         />
 
+        <Input
+          value={nacionalidade}
+          onChange={(e) => setNacionalidade(e.target.value)}
+          placeholder="Nacionalidade"
+        />
+
+        {error && <ErrorText>{error}</ErrorText>}
+
         <Button type="submit">Salvar Alterações</Button>
       </Form>
     </Container>
   );
 }
+

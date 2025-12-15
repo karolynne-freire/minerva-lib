@@ -24,6 +24,8 @@ export default function EditBookPage() {
 
   const [titulo, setTitulo] = useState("");
   const [authorId, setAuthorId] = useState("");
+  const [ano, setAno] = useState("");
+  const [categoria, setCategoria] = useState("");
   const [authors, setAuthors] = useState<Author[]>([]);
   const [error, setError] = useState("");
 
@@ -31,6 +33,8 @@ export default function EditBookPage() {
     api.get(`/books/${id}`).then((res) => {
       setTitulo(res.data.titulo);
       setAuthorId(res.data.author_id);
+      setAno(res.data.ano);
+      setCategoria(res.data.categoria);
     });
 
     api.get("/authors").then((res) => setAuthors(res.data));
@@ -39,14 +43,16 @@ export default function EditBookPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!titulo.trim()) {
-      setError("Título é obrigatório");
+    if (!titulo.trim() || !ano || !categoria.trim()) {
+      setError("Preencha todos os campos");
       return;
     }
 
     await api.put(`/books/${id}`, {
       titulo,
       author_id: authorId,
+      ano,
+      categoria,
     });
 
     router.push("/livros");
@@ -64,6 +70,7 @@ export default function EditBookPage() {
         <Input
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
+          placeholder="Título"
         />
 
         <Select
@@ -77,6 +84,19 @@ export default function EditBookPage() {
             </option>
           ))}
         </Select>
+
+        <Input
+          type="number"
+          placeholder="Ano"
+          value={ano}
+          onChange={(e) => setAno(e.target.value)}
+        />
+
+        <Input
+          placeholder="Categoria"
+          value={categoria}
+          onChange={(e) => setCategoria(e.target.value)}
+        />
 
         {error && <ErrorText>{error}</ErrorText>}
 

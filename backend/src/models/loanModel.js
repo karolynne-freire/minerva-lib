@@ -26,8 +26,12 @@ export const LoanModel = {
 
     // ❌ Livro já emprestado?
     const [check] = await db.query(
-      `SELECT id FROM loans 
-       WHERE book_id = ? AND data_devolucao IS NULL`,
+      `
+      SELECT id 
+      FROM loans 
+      WHERE book_id = ? 
+        AND data_devolucao IS NULL
+      `,
       [book_id]
     );
 
@@ -36,8 +40,10 @@ export const LoanModel = {
     }
 
     const [result] = await db.query(
-      `INSERT INTO loans (user_id, book_id, data_emprestimo)
-       VALUES (?, ?, ?)`,
+      `
+      INSERT INTO loans (user_id, book_id, data_emprestimo)
+      VALUES (?, ?, ?)
+      `,
       [user_id, book_id, data_emprestimo]
     );
 
@@ -47,12 +53,16 @@ export const LoanModel = {
   // Devolver livro
   async returnBook(id) {
     const [result] = await db.query(
-      `UPDATE loans
-       SET data_devolucao = CURDATE()
-       WHERE id = ?`,
+      `
+      UPDATE loans
+      SET data_devolucao = CURDATE()
+      WHERE id = ? 
+        AND data_devolucao IS NULL
+      `,
       [id]
     );
 
     return result.affectedRows > 0;
   }
 };
+

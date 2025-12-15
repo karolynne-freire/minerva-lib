@@ -2,43 +2,80 @@ import { BookModel } from "../models/bookModel.js";
 
 export const BookController = {
   async index(req, res) {
-    const books = await BookModel.getAll();
-    res.json(books);
+    try {
+      const books = await BookModel.getAll();
+      res.json(books);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao listar livros" });
+    }
   },
 
   async show(req, res) {
-    const book = await BookModel.getById(req.params.id);
-    res.json(book);
+    try {
+      const book = await BookModel.getById(req.params.id);
+
+      if (!book) {
+        return res.status(404).json({ error: "Livro não encontrado" });
+      }
+
+      res.json(book);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar livro" });
+    }
   },
 
   async store(req, res) {
-    const { titulo, author_id } = req.body;
+    try {
+      const { titulo, ano, categoria, author_id } = req.body;
 
-    if (!titulo || !titulo.trim()) {
-      return res.status(400).json({ error: "Título é obrigatório" });
+      if (!titulo || !ano || !categoria || !author_id) {
+        return res.status(400).json({
+          error: "Título, ano, categoria e autor são obrigatórios",
+        });
+      }
+
+      const id = await BookModel.create({
+        titulo,
+        ano,
+        categoria,
+        author_id,
+      });
+
+      res.status(201).json({ id });
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao cadastrar livro" });
     }
-
-    if (!author_id) {
-      return res.status(400).json({ error: "Autor é obrigatório" });
-    }
-
-    const id = await BookModel.create({ titulo, author_id });
-    res.status(201).json({ id });
   },
 
   async update(req, res) {
-    const { titulo, author_id } = req.body;
+    try {
+      const { titulo, ano, categoria, author_id } = req.body;
 
-    if (!titulo || !titulo.trim()) {
-      return res.status(400).json({ error: "Título é obrigatório" });
+      if (!titulo || !ano || !categoria || !author_id) {
+        return res.status(400).json({
+          error: "Todos os campos são obrigatórios",
+        });
+      }
+
+      await BookModel.update(req.params.id, {
+        titulo,
+        ano,
+        categoria,
+        author_id,
+      });
+
+      res.json({ message: "Livro atualizado com sucesso" });
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao atualizar livro" });
     }
-
-    await BookModel.update(req.params.id, { titulo, author_id });
-    res.json({ message: "Livro atualizado" });
   },
 
   async delete(req, res) {
-    await BookModel.delete(req.params.id);
-    res.json({ message: "Livro removido" });
+    try {
+      await BookModel.delete(req.params.id);
+      res.json({ message: "Livro removido com sucesso" });
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao remover livro" });
+    }
   },
 };

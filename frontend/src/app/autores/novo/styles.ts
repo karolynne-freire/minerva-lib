@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.main`
-  min-height: 8
-  0vh;
+  min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +10,7 @@ export const Container = styled.main`
 export const Form = styled.form`
   width: 100%;
   max-width: 420px;
-  padding: 32px;
+  padding: 42px;
   border-radius: 20px;
   position: relative;
 

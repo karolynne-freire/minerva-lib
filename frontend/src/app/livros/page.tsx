@@ -21,6 +21,8 @@ interface Book {
   titulo: string;
   autor: string;
   status: "emprestado" | "disponivel";
+  categoria: string;
+  ano: number;
 }
 
 export default function BooksPage() {
@@ -76,6 +78,9 @@ export default function BooksPage() {
           <Card key={book.id}>
             <h3>{book.titulo}</h3>
             <p>Autor: {book.autor}</p>
+            <p>Categoria: {book.categoria}</p>
+            <p>Ano: {book.ano}</p>
+
 
             <Status status={book.status}>
               {book.status === "emprestado"
@@ -96,12 +101,16 @@ export default function BooksPage() {
         ))}
       </Grid>
 
-      {bookToDelete && (
-        <ConfirmModal
-          onCancel={() => setBookToDelete(null)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
+{bookToDelete && (
+  <ConfirmModal
+    title="Excluir livro?"
+    description="Essa ação não poderá ser desfeita."
+    confirmText="Excluir"
+    onCancel={() => setBookToDelete(null)}
+    onConfirm={handleConfirmDelete}
+  />
+)}
+
     </Container>
   );
 }

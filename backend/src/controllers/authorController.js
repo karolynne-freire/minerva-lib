@@ -1,65 +1,72 @@
 import { AuthorModel } from "../models/authorModel.js";
 
 export const AuthorController = {
-  async index(req, res) {
-    const authors = await AuthorModel.getAll();
-    res.json(authors);
+  async list(req, res) {
+    try {
+      const authors = await AuthorModel.findAll();
+      res.json(authors);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao listar autores" });
+    }
   },
 
-  async show(req, res) {
-    const author = await AuthorModel.getById(req.params.id);
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+      const author = await AuthorModel.findById(id);
 
-    if (!author) {
-      return res.status(404).json({ error: "Autor não encontrado" });
+      if (!author) {
+        return res.status(404).json({ error: "Autor não encontrado" });
+      }
+
+      res.json(author);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar autor" });
     }
-
-    res.json(author);
   },
 
-  async store(req, res) {
-    const { nome } = req.body;
+  async create(req, res) {
+    try {
+      const { nome, nacionalidade } = req.body;
 
-    // validação: vazio
-    if (!nome || !nome.trim()) {
-      return res.status(400).json({
-        error: "Nome é obrigatório",
-      });
+      if (!nome || !nacionalidade) {
+        return res.status(400).json({
+          error: "Nome e nacionalidade são obrigatórios"
+        });
+      }
+
+      const author = await AuthorModel.create({ nome, nacionalidade });
+      res.status(201).json(author);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao criar autor" });
     }
-
-    // validação: apenas letras
-    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
-      return res.status(400).json({
-        error: "Nome inválido",
-      });
-    }
-
-    const id = await AuthorModel.create({ nome });
-    res.status(201).json({ id });
   },
 
   async update(req, res) {
-    const { nome } = req.body;
+    try {
+      const { id } = req.params;
+      const { nome, nacionalidade } = req.body;
 
-    if (!nome || !nome.trim()) {
-      return res.status(400).json({
-        error: "Nome é obrigatório",
-      });
+      if (!nome || !nacionalidade) {
+        return res.status(400).json({
+          error: "Nome e nacionalidade são obrigatórios"
+        });
+      }
+
+      await AuthorModel.update(id, { nome, nacionalidade });
+      res.json({ message: "Autor atualizado com sucesso" });
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao atualizar autor" });
     }
-
-    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
-      return res.status(400).json({
-        error: "Nome inválido",
-      });
-    }
-
-    await AuthorModel.update(req.params.id, { nome });
-    res.json({ message: "Autor atualizado" });
   },
 
   async delete(req, res) {
-    await AuthorModel.delete(req.params.id);
-    res.json({ message: "Autor removido" });
-  },
+    try {
+      const { id } = req.params;
+      await AuthorModel.delete(id);
+      res.json({ message: "Autor removido com sucesso" });
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao deletar autor" });
+    }
+  }
 };
-
-

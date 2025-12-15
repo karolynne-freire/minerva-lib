@@ -12,7 +12,6 @@ import {
   ErrorText,
 } from "@/styles/forms";
 import { Button as UIButton } from "@/styles/ui";
-import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
 
 interface Author {
   id: number;
@@ -22,9 +21,10 @@ interface Author {
 export default function NewBookPage() {
   const [titulo, setTitulo] = useState("");
   const [authorId, setAuthorId] = useState("");
+  const [ano, setAno] = useState("");
+  const [categoria, setCategoria] = useState("");
   const [authors, setAuthors] = useState<Author[]>([]);
   const [error, setError] = useState("");
-  const [bookToDelete, setBookToDelete] = useState<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,19 +44,23 @@ export default function NewBookPage() {
       return;
     }
 
+    if (!ano || Number(ano) < 0) {
+      setError("Ano inválido");
+      return;
+    }
+
+    if (!categoria.trim()) {
+      setError("Categoria é obrigatória");
+      return;
+    }
+
     await api.post("/books", {
       titulo,
       author_id: authorId,
+      ano,
+      categoria,
     });
 
-    router.push("/livros");
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!bookToDelete) return;
-
-    await api.delete(`/books/${bookToDelete}`);
-    setBookToDelete(null);
     router.push("/livros");
   };
 
@@ -84,17 +88,24 @@ export default function NewBookPage() {
           ))}
         </Select>
 
+        <Input
+          placeholder="Ano de publicação"
+          type="number"
+          value={ano}
+          onChange={(e) => setAno(e.target.value)}
+        />
+
+        <Input
+          placeholder="Categoria"
+          value={categoria}
+          onChange={(e) => setCategoria(e.target.value)}
+        />
+
         {error && <ErrorText>{error}</ErrorText>}
 
         <UIButton type="submit">Salvar</UIButton>
       </Form>
-
-      {bookToDelete && (
-        <ConfirmModal
-          onCancel={() => setBookToDelete(null)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
     </Container>
   );
 }
+

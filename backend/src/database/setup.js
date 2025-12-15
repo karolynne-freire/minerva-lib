@@ -2,10 +2,12 @@ import { db } from "../database/connection.js";
 
 export async function setupDatabase() {
   console.log("➡️ Executando setupDatabase()...");
+
   await db.query(`
     CREATE TABLE IF NOT EXISTS authors (
       id INT AUTO_INCREMENT PRIMARY KEY,
-      nome VARCHAR(255) NOT NULL
+      nome VARCHAR(255) NOT NULL,
+      nacionalidade VARCHAR(100) NOT NULL
     );
   `);
 
@@ -13,6 +15,8 @@ export async function setupDatabase() {
     CREATE TABLE IF NOT EXISTS books (
       id INT AUTO_INCREMENT PRIMARY KEY,
       titulo VARCHAR(255) NOT NULL,
+      ano INT NOT NULL,
+      categoria VARCHAR(100) NOT NULL,
       author_id INT,
       FOREIGN KEY (author_id) REFERENCES authors(id)
         ON DELETE SET NULL
@@ -47,26 +51,27 @@ export async function setupDatabase() {
   const [a] = await db.query("SELECT COUNT(*) AS total FROM authors");
   if (a[0].total === 0) {
     await db.query(`
-      INSERT INTO authors (nome)
+      INSERT INTO authors (nome, nacionalidade)
       VALUES
-        ('Machado de Assis'),
-        ('Clarice Lispector'),
-        ('J. R. R. Tolkien');
+        ('Machado de Assis', 'Brasileiro'),
+        ('Clarice Lispector', 'Brasileira'),
+        ('J. R. R. Tolkien', 'Britânico');
     `);
     console.log("Autores iniciais inseridos!");
   }
 
-  const [b] = await db.query("SELECT COUNT(*) AS total FROM books");
-  if (b[0].total === 0) {
-    await db.query(`
-      INSERT INTO books (titulo, author_id)
-      VALUES
-        ('Dom Casmurro', 1),
-        ('A Hora da Estrela', 2),
-        ('O Senhor dos Anéis', 3);
-    `);
-    console.log("Livros iniciais inseridos!");
-  }
+ const [b] = await db.query("SELECT COUNT(*) AS total FROM books");
+if (b[0].total === 0) {
+  await db.query(`
+    INSERT INTO books (titulo, ano, categoria, author_id)
+    VALUES
+      ('Dom Casmurro', 1899, 'Romance', 1),
+      ('A Hora da Estrela', 1977, 'Romance', 2),
+      ('O Senhor dos Anéis', 1954, 'Fantasia', 3);
+  `);
+  console.log("Livros iniciais inseridos!");
+}
+
 
   const [u] = await db.query("SELECT COUNT(*) AS total FROM users");
   if (u[0].total === 0) {
@@ -91,5 +96,5 @@ export async function setupDatabase() {
     console.log("Empréstimos iniciais inseridos!");
   }
 
-  console.log("Banco configurado com sucesso!");
+  console.log("✅ Banco configurado com sucesso!");
 }

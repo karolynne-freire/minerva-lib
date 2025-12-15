@@ -97,12 +97,16 @@ export default function LoansPage() {
         ))}
       </Grid>
 
-      {loanToReturn && (
-        <ConfirmModal
-          onCancel={() => setLoanToReturn(null)}
-          onConfirm={handleReturn}
-        />
-      )}
+{loanToReturn && (
+  <ConfirmModal
+    title="Confirmar devolução?"
+    description="O livro será marcado como disponível."
+    confirmText="Devolver"
+    onCancel={() => setLoanToReturn(null)}
+    onConfirm={handleReturn}
+  />
+)}
+
     </Container>
   );
 }
