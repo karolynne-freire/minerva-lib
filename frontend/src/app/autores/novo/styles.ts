@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.main`
-  min-height: 100vh;
+  min-height: 8
+  0vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,14 +70,17 @@ export const Button = styled.button`
   border: none;
   cursor: pointer;
 
-  background: rgba(66, 153, 225, 0.85);
+  background: #3d3a39;;
   color: #fff;
   font-weight: 600;
 
   transition: 0.2s;
 
+transition: background 0.3s ease, transform 0.2s ease;
+
   &:hover {
-    opacity: 0.85;
+    background: #6c625e;
+    transform: translateY(-2px);
   }
 `;
 

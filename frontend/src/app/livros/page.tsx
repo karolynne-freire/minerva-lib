@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
+
 import {
   Container,
   Grid,
@@ -11,7 +12,9 @@ import {
   Button,
   Status,
 } from "@/styles/ui";
+
 import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
+import ApiError from "@/components/ApiError/ApiError";
 
 interface Book {
   id: number;
@@ -23,24 +26,41 @@ interface Book {
 export default function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
+  const [hasError, setHasError] = useState(false);
+
   const router = useRouter();
 
   const loadBooks = async () => {
-    const res = await api.get("/books");
-    setBooks(res.data);
+    try {
+      const res = await api.get("/books");
+      setBooks(res.data);
+      setHasError(false);
+    } catch (error) {
+      console.error("Erro ao carregar livros:", error);
+      setHasError(true);
+    }
   };
 
   const handleConfirmDelete = async () => {
     if (!bookToDelete) return;
 
-    await api.delete(`/books/${bookToDelete.id}`);
-    setBookToDelete(null);
-    loadBooks();
+    try {
+      await api.delete(`/books/${bookToDelete.id}`);
+      setBookToDelete(null);
+      loadBooks();
+    } catch (error) {
+      console.error("Erro ao excluir livro:", error);
+      setHasError(true);
+    }
   };
 
   useEffect(() => {
     loadBooks();
   }, []);
+
+  if (hasError) {
+    return <ApiError />;
+  }
 
   return (
     <Container>

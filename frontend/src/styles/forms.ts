@@ -1,21 +1,28 @@
 import styled from "styled-components";
 
-export const Container = styled.main`
-  min-height: 100vh;
+export const Container = styled.div`
+  min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
+
 export const Form = styled.form`
-  position: relative;
-  width: 360px;
+  background: rgba(40, 40, 40, 0.95);
   padding: 32px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(14px);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
   color: white;
+  position: relative;
+
+  display: flex;              
+  flex-direction: column;     
+  gap: 10px;                  
 `;
+
+
 
 export const Input = styled.input`
   width: 100%;
@@ -41,22 +48,26 @@ export const ErrorText = styled.span`
 `;
 
 export const Button = styled.button`
-  margin-top: 12px;
+  width: 100%;        
+  margin-top: 16px;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
 
-  background: rgba(66, 153, 225, 0.85);
+  background: #3d3a39;
+
   color: #fff;
   font-weight: 600;
 
-  transition: 0.2s;
+transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    opacity: 0.85;
+    background: #6c625e;
+    transform: translateY(-2px);
   }
 `;
+
 
 export const CloseButton = styled.button`
   position: absolute;

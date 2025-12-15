@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
+
 import {
   Container,
   Grid,
@@ -10,7 +11,9 @@ import {
   Actions,
   Button,
 } from "@/styles/ui";
+
 import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
+import ApiError from "@/components/ApiError/ApiError";
 
 interface Loan {
   id: number;
@@ -23,28 +26,44 @@ interface Loan {
 export default function LoansPage() {
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loanToReturn, setLoanToReturn] = useState<Loan | null>(null);
+  const [hasError, setHasError] = useState(false);
+
   const router = useRouter();
 
   const loadLoans = async () => {
-    const res = await api.get("/loans");
-    setLoans(res.data);
+    try {
+      const res = await api.get("/loans");
+      setLoans(res.data);
+      setHasError(false);
+    } catch (error) {
+      console.error("Erro ao carregar empréstimos:", error);
+      setHasError(true);
+    }
   };
 
   const handleReturn = async () => {
     if (!loanToReturn) return;
 
-    await api.patch(`/loans/${loanToReturn.id}/return`);
-    setLoanToReturn(null);
-    loadLoans();
+    try {
+      await api.patch(`/loans/${loanToReturn.id}/return`);
+      setLoanToReturn(null);
+      loadLoans();
+    } catch (error) {
+      console.error("Erro ao devolver empréstimo:", error);
+      setHasError(true);
+    }
   };
 
   useEffect(() => {
     loadLoans();
   }, []);
 
+  if (hasError) {
+    return <ApiError />;
+  }
+
   return (
     <Container>
-      {/* 🔹 Novo empréstimo */}
       <Button
         onClick={() => router.push("/emprestimos/novo")}
         style={{ marginBottom: 24 }}
