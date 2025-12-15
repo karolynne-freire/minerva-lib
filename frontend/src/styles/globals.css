@@ -1,0 +1,38 @@
+/* Reset básico opcional */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+
+    background-image: url("https://img.freepik.com/fotos-gratis/sortimento-de-livros-com-fundo-escuro_23-2148898297.jpg?semt=ais_hybrid&w=740&q=80");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: Arial, sans-serif;
+  }
+  
+.content {
+  margin-left: 240px;
+  padding: 24px;
+  transition: margin-left 0.3s ease;
+  position: relative; /* Adicione, se não tiver */
+  z-index: 1; /* Para garantir que não sobreponha o botão */
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    padding-top: 60px;   /* Espaço para o hamburger em cima */
+  padding-left: 24px;  /* Espaço para o hamburger na esquerda */
+  padding-right: 24px;
+  }
+}
+
+
