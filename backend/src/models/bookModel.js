@@ -1,29 +1,29 @@
 import { db } from "../database/connection.js";
 
 export const BookModel = {
-  async getAll() {
-    const [rows] = await db.query(`
-      SELECT 
-        b.id,
-        b.titulo,
-        b.ano,
-        b.categoria,
-        a.nome AS autor,
-        CASE
-          WHEN EXISTS (
-            SELECT 1 FROM loans l
-            WHERE l.book_id = b.id
-            AND l.data_devolucao IS NULL
-          )
-          THEN 'emprestado'
-          ELSE 'disponivel'
-        END AS status
-      FROM books b
-      JOIN authors a ON a.id = b.author_id
-    `);
+async getAll() {
+  const [rows] = await db.query(`
+    SELECT 
+      b.id,
+      b.titulo,
+      b.ano,
+      b.categoria,
+      COALESCE(a.nome, 'Autor não informado') AS autor,
+      CASE
+        WHEN EXISTS (
+          SELECT 1 FROM loans l
+          WHERE l.book_id = b.id
+          AND l.data_devolucao IS NULL
+        )
+        THEN 'emprestado'
+        ELSE 'disponivel'
+      END AS status
+    FROM books b
+    LEFT JOIN authors a ON a.id = b.author_id
+  `);
 
-    return rows;
-  },
+  return rows;
+},
 
   async getById(id) {
     const [rows] = await db.query(
@@ -65,4 +65,3 @@ export const BookModel = {
     await db.query("DELETE FROM books WHERE id = ?", [id]);
   },
 };
-

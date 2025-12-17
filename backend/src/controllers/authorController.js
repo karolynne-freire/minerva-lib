@@ -1,5 +1,7 @@
 import { AuthorModel } from "../models/authorModel.js";
 
+const onlyLettersRegex = /^[A-Za-zÀ-ÿ\s]+$/;
+
 export const AuthorController = {
   async list(req, res) {
     try {
@@ -29,13 +31,29 @@ export const AuthorController = {
     try {
       const { nome, nacionalidade } = req.body;
 
-      if (!nome || !nacionalidade) {
+      if (!nome || !nome.trim()) {
         return res.status(400).json({
-          error: "Nome e nacionalidade são obrigatórios"
+          error: "Nome é obrigatório",
         });
       }
 
-      const author = await AuthorModel.create({ nome, nacionalidade });
+      if (!onlyLettersRegex.test(nome)) {
+        return res.status(400).json({
+          error: "Nome não pode conter números ou símbolos",
+        });
+      }
+
+      if (nacionalidade && !onlyLettersRegex.test(nacionalidade)) {
+        return res.status(400).json({
+          error: "Nacionalidade não pode conter números ou símbolos",
+        });
+      }
+
+      const author = await AuthorModel.create({
+        nome,
+        nacionalidade: nacionalidade || null,
+      });
+
       res.status(201).json(author);
     } catch (error) {
       res.status(500).json({ error: "Erro ao criar autor" });
@@ -47,13 +65,29 @@ export const AuthorController = {
       const { id } = req.params;
       const { nome, nacionalidade } = req.body;
 
-      if (!nome || !nacionalidade) {
+      if (!nome || !nome.trim()) {
         return res.status(400).json({
-          error: "Nome e nacionalidade são obrigatórios"
+          error: "Nome é obrigatório",
         });
       }
 
-      await AuthorModel.update(id, { nome, nacionalidade });
+      if (!onlyLettersRegex.test(nome)) {
+        return res.status(400).json({
+          error: "Nome não pode conter números ou símbolos",
+        });
+      }
+
+      if (nacionalidade && !onlyLettersRegex.test(nacionalidade)) {
+        return res.status(400).json({
+          error: "Nacionalidade não pode conter números ou símbolos",
+        });
+      }
+
+      await AuthorModel.update(id, {
+        nome,
+        nacionalidade: nacionalidade || null,
+      });
+
       res.json({ message: "Autor atualizado com sucesso" });
     } catch (error) {
       res.status(500).json({ error: "Erro ao atualizar autor" });
@@ -68,5 +102,5 @@ export const AuthorController = {
     } catch (error) {
       res.status(500).json({ error: "Erro ao deletar autor" });
     }
-  }
+  },
 };

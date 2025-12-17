@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api from "@/services/api";
 import { useParams, useRouter } from "next/navigation";
+import api from "@/services/api";
 import {
   Container,
   Form,
@@ -11,6 +11,8 @@ import {
   CloseButton,
   ErrorText,
 } from "../novo/styles";
+
+const onlyLettersRegex = /^[A-Za-zÀ-ÿ\s]+$/;
 
 export default function EditAuthorPage() {
   const { id } = useParams();
@@ -23,21 +25,31 @@ export default function EditAuthorPage() {
   useEffect(() => {
     api.get(`/authors/${id}`).then((response) => {
       setNome(response.data.nome);
-      setNacionalidade(response.data.nacionalidade);
+      setNacionalidade(response.data.nacionalidade || "");
     });
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nome.trim() || !nacionalidade.trim()) {
-      setError("Preencha todos os campos");
+    if (!nome.trim()) {
+      setError("O nome do autor é obrigatório");
+      return;
+    }
+
+    if (!onlyLettersRegex.test(nome)) {
+      setError("O nome não pode conter números ou símbolos");
+      return;
+    }
+
+    if (nacionalidade.trim() && !onlyLettersRegex.test(nacionalidade)) {
+      setError("A nacionalidade não pode conter números ou símbolos");
       return;
     }
 
     await api.put(`/authors/${id}`, {
       nome,
-      nacionalidade,
+      nacionalidade: nacionalidade || null,
     });
 
     router.push("/autores");
@@ -46,7 +58,10 @@ export default function EditAuthorPage() {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <CloseButton onClick={() => router.push("/autores")}>
+        <CloseButton
+          type="button"
+          onClick={() => router.push("/autores")}
+        >
           ✕
         </CloseButton>
 
@@ -61,7 +76,7 @@ export default function EditAuthorPage() {
         <Input
           value={nacionalidade}
           onChange={(e) => setNacionalidade(e.target.value)}
-          placeholder="Nacionalidade"
+          placeholder="Nacionalidade (opcional)"
         />
 
         {error && <ErrorText>{error}</ErrorText>}
@@ -71,4 +86,3 @@ export default function EditAuthorPage() {
     </Container>
   );
 }
-

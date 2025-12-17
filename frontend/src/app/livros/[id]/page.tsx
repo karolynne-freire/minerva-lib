@@ -32,9 +32,9 @@ export default function EditBookPage() {
   useEffect(() => {
     api.get(`/books/${id}`).then((res) => {
       setTitulo(res.data.titulo);
-      setAuthorId(res.data.author_id);
-      setAno(res.data.ano);
-      setCategoria(res.data.categoria);
+      setAuthorId(String(res.data.author_id));
+      setAno(res.data.ano ? String(res.data.ano) : "");
+      setCategoria(res.data.categoria || "");
     });
 
     api.get("/authors").then((res) => setAuthors(res.data));
@@ -43,16 +43,21 @@ export default function EditBookPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!titulo.trim() || !ano || !categoria.trim()) {
-      setError("Preencha todos os campos");
+    if (!titulo.trim()) {
+      setError("Título é obrigatório");
+      return;
+    }
+
+    if (!authorId) {
+      setError("Selecione um autor");
       return;
     }
 
     await api.put(`/books/${id}`, {
       titulo,
-      author_id: authorId,
-      ano,
-      categoria,
+      author_id: Number(authorId),
+      ano: ano ? Number(ano) : null,
+      categoria: categoria.trim() || null,
     });
 
     router.push("/livros");
@@ -70,14 +75,14 @@ export default function EditBookPage() {
         <Input
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
-          placeholder="Título"
+          placeholder="Título *"
         />
 
         <Select
           value={authorId}
           onChange={(e) => setAuthorId(e.target.value)}
         >
-          <option value="">Selecione um autor</option>
+          <option value="">Selecione um autor *</option>
           {authors.map((author) => (
             <option key={author.id} value={author.id}>
               {author.nome}
@@ -87,13 +92,13 @@ export default function EditBookPage() {
 
         <Input
           type="number"
-          placeholder="Ano"
+          placeholder="Ano (opcional)"
           value={ano}
           onChange={(e) => setAno(e.target.value)}
         />
 
         <Input
-          placeholder="Categoria"
+          placeholder="Categoria (opcional)"
           value={categoria}
           onChange={(e) => setCategoria(e.target.value)}
         />

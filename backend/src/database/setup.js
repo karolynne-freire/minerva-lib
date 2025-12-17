@@ -7,7 +7,7 @@ export async function setupDatabase() {
     CREATE TABLE IF NOT EXISTS authors (
       id INT AUTO_INCREMENT PRIMARY KEY,
       nome VARCHAR(255) NOT NULL,
-      nacionalidade VARCHAR(100) NOT NULL
+      nacionalidade VARCHAR(100) NULL
     );
   `);
 
@@ -15,8 +15,8 @@ export async function setupDatabase() {
     CREATE TABLE IF NOT EXISTS books (
       id INT AUTO_INCREMENT PRIMARY KEY,
       titulo VARCHAR(255) NOT NULL,
-      ano INT NOT NULL,
-      categoria VARCHAR(100) NOT NULL,
+      ano INT NULL,
+      categoria VARCHAR(100) NULL,
       author_id INT,
       FOREIGN KEY (author_id) REFERENCES authors(id)
         ON DELETE SET NULL

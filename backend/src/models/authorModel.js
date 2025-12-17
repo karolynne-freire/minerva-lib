@@ -17,19 +17,26 @@ export const AuthorModel = {
   },
 
   async create({ nome, nacionalidade }) {
-    const [result] = await db.query(
-      "INSERT INTO authors (nome, nacionalidade) VALUES (?, ?)",
-      [nome, nacionalidade]
-    );
-    return { id: result.insertId, nome, nacionalidade };
-  },
+  const [result] = await db.query(
+    "INSERT INTO authors (nome, nacionalidade) VALUES (?, ?)",
+    [nome, nacionalidade || null]
+  );
 
-  async update(id, { nome, nacionalidade }) {
-    await db.query(
-      "UPDATE authors SET nome = ?, nacionalidade = ? WHERE id = ?",
-      [nome, nacionalidade, id]
-    );
-  },
+  return {
+    id: result.insertId,
+    nome,
+    nacionalidade: nacionalidade || null,
+  };
+}
+,
+
+async update(id, { nome, nacionalidade }) {
+  await db.query(
+    "UPDATE authors SET nome = ?, nacionalidade = ? WHERE id = ?",
+    [nome, nacionalidade || null, id]
+  );
+  return true;
+},
 
 
   async delete(id) {

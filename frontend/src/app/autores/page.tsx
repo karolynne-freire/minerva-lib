@@ -19,7 +19,7 @@ import ApiError from "@/components/ApiError/ApiError";
 interface Author {
   id: number;
   nome: string;
-  nacionalidade: string;
+  nacionalidade?: string;
 }
 
 export default function AuthorsPage() {

@@ -21,8 +21,8 @@ interface Book {
   titulo: string;
   autor: string;
   status: "emprestado" | "disponivel";
-  categoria: string;
-  ano: number;
+  categoria?: string;
+  ano?: number;
 }
 
 export default function BooksPage() {
