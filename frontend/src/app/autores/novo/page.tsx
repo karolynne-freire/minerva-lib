@@ -12,6 +12,8 @@ import {
   ErrorText,
 } from "./styles";
 
+const onlyLettersRegex = /^[A-Za-zÀ-ÿ\s]+$/;
+
 export default function NewAuthorPage() {
   const [nome, setNome] = useState("");
   const [nacionalidade, setNacionalidade] = useState("");
@@ -26,8 +28,13 @@ export default function NewAuthorPage() {
       return;
     }
 
-    if (!nacionalidade.trim()) {
-      setError("A nacionalidade é obrigatória");
+    if (!onlyLettersRegex.test(nome)) {
+      setError("O nome não pode conter números ou símbolos");
+      return;
+    }
+
+    if (nacionalidade.trim() && !onlyLettersRegex.test(nacionalidade)) {
+      setError("A nacionalidade não pode conter números ou símbolos");
       return;
     }
 
@@ -35,7 +42,7 @@ export default function NewAuthorPage() {
       setError("");
       await api.post("/authors", {
         nome,
-        nacionalidade,
+        nacionalidade: nacionalidade || null,
       });
       router.push("/autores");
     } catch {
@@ -62,7 +69,7 @@ export default function NewAuthorPage() {
         />
 
         <Input
-          placeholder="Nacionalidade"
+          placeholder="Nacionalidade (opcional)"
           value={nacionalidade}
           onChange={(e) => setNacionalidade(e.target.value)}
         />

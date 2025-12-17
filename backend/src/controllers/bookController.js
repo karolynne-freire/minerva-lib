@@ -28,16 +28,22 @@ export const BookController = {
     try {
       const { titulo, ano, categoria, author_id } = req.body;
 
-      if (!titulo || !ano || !categoria || !author_id) {
+      if (!titulo || !titulo.trim()) {
         return res.status(400).json({
-          error: "Título, ano, categoria e autor são obrigatórios",
+          error: "Título é obrigatório",
+        });
+      }
+
+      if (!author_id) {
+        return res.status(400).json({
+          error: "Autor é obrigatório",
         });
       }
 
       const id = await BookModel.create({
         titulo,
-        ano,
-        categoria,
+        ano: ano || null,
+        categoria: categoria || null,
         author_id,
       });
 
@@ -51,16 +57,22 @@ export const BookController = {
     try {
       const { titulo, ano, categoria, author_id } = req.body;
 
-      if (!titulo || !ano || !categoria || !author_id) {
+      if (!titulo || !titulo.trim()) {
         return res.status(400).json({
-          error: "Todos os campos são obrigatórios",
+          error: "Título é obrigatório",
+        });
+      }
+
+      if (!author_id) {
+        return res.status(400).json({
+          error: "Autor é obrigatório",
         });
       }
 
       await BookModel.update(req.params.id, {
         titulo,
-        ano,
-        categoria,
+        ano: ano || null,
+        categoria: categoria || null,
         author_id,
       });
 

@@ -44,21 +44,16 @@ export default function NewBookPage() {
       return;
     }
 
-    if (!ano || Number(ano) < 0) {
+    if (ano && Number(ano) < 0) {
       setError("Ano inválido");
-      return;
-    }
-
-    if (!categoria.trim()) {
-      setError("Categoria é obrigatória");
       return;
     }
 
     await api.post("/books", {
       titulo,
-      author_id: authorId,
-      ano,
-      categoria,
+      author_id: Number(authorId),
+      ano: ano ? Number(ano) : null,
+      categoria: categoria.trim() || null,
     });
 
     router.push("/livros");
@@ -74,13 +69,13 @@ export default function NewBookPage() {
         <h2>Cadastrar Livro</h2>
 
         <Input
-          placeholder="Título do livro"
+          placeholder="Título do livro *"
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
         />
 
         <Select value={authorId} onChange={(e) => setAuthorId(e.target.value)}>
-          <option value="">Selecione um autor</option>
+          <option value="">Selecione um autor *</option>
           {authors.map((author) => (
             <option key={author.id} value={author.id}>
               {author.nome}
@@ -89,14 +84,14 @@ export default function NewBookPage() {
         </Select>
 
         <Input
-          placeholder="Ano de publicação"
+          placeholder="Ano de publicação (opcional)"
           type="number"
           value={ano}
           onChange={(e) => setAno(e.target.value)}
         />
 
         <Input
-          placeholder="Categoria"
+          placeholder="Categoria (opcional)"
           value={categoria}
           onChange={(e) => setCategoria(e.target.value)}
         />
@@ -108,4 +103,3 @@ export default function NewBookPage() {
     </Container>
   );
 }
-
